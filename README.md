@@ -4,6 +4,10 @@
 请求工具。它可以编辑 cURL 请求、选择 HTTP 协议策略、发送 HTTP/HTTPS 请求，
 并查看最终请求头、响应头、响应正文以及实际协商到的网络协议。
 
+## Gallery
+
+![crRequest 主界面：发送 Digest Auth 请求并查看响应](Screenshot%20From%202026-07-17%2018-51-34.png)
+
 ## 主要功能
 
 - 支持 `GET`、`POST`、`PUT`、`PATCH`、`DELETE` 请求。
