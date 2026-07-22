@@ -1,8 +1,7 @@
 # crRequest
 
-`crRequest` 是C++开发的 基于 Chromium 150.0.7871.91 内置的 Network Service 和 UI Views 构建的 API
-请求工具。它可以编辑 cURL 请求、选择 HTTP 协议策略、发送 HTTP/HTTPS 请求，
-并查看最终请求头、响应头、响应正文以及实际协商到的网络协议。
+`crRequest` 是C++开发的 基于 Chromium 150.0.7871.91 内置的 Network Service 和 UI Views 构建的 开发者工具。它可以编辑 cURL 请求、选择 HTTP 协议策略、发送 HTTP/HTTPS 请求，
+并查看最终请求头、响应头、响应正文以及实际协商到的网络协议。并使用libssh2 添加了 ssh 客户端的支持
 
 ## Gallery
 
