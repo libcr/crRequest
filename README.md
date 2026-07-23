@@ -21,6 +21,28 @@ HTTP/HTTPS 请求、连接远程 Shell、管理远程文件，以及查询 SQLit
 | PostgreSQL 安全连接 | 支持密码、SCRAM 和客户端证书认证，可配置 TLS 校验模式、CA 证书、客户端证书和私钥 |
 | 界面 | 支持亮色/暗色主题、可隐藏和调整宽度的侧边栏，以及水平多标签页 |
 
+## 截图
+
+### HTTP/QUIC 请求与响应
+
+![HTTP/QUIC 请求与响应](<Screenshot From 2026-07-18 18-37-22.png>)
+
+### 开发工具
+
+![开发工具](<Screenshot From 2026-07-18 19-11-06.png>)
+
+### 主题设置
+
+![主题设置](<Screenshot From 2026-07-22 18-20-45.png>)
+
+### SSH 终端
+
+![SSH 终端](<Screenshot From 2026-07-22 18-21-24.png>)
+
+### 数据库查询
+
+![数据库查询](<Screenshot From 2026-07-23 16-46-14.png>)
+
 ## 启动
 
 启动已构建或已安装的 `crRequest` 可执行文件。程序依赖随应用提供的
