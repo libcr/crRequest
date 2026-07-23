@@ -1,23 +1,25 @@
 # crRequest
 
-`crRequest` 是C++开发的 基于 Chromium 150.0.7871.91 内置的 Network Service 和 UI Views 构建的 开发者工具。它可以编辑 cURL 请求、选择 HTTP 协议策略、发送 HTTP/HTTPS 请求，
-并查看最终请求头、响应头、响应正文以及实际协商到的网络协议。并使用libssh2 添加了 ssh 客户端的支持
-
-## Gallery
-
-![crRequest 主界面：发送 Digest Auth 请求并查看响应](Screenshot%20From%202026-07-17%2018-51-34.png)
+`crRequest` 是一个基于 Chromium 150 Network Service 和 Views 构建的桌面开发
+工具，集成了 HTTP API 调试、SSH/SFTP 和数据库查询功能。它可以编辑并发送
+HTTP/HTTPS 请求、连接远程 Shell、管理远程文件，以及查询 SQLite 和 PostgreSQL
+数据库。
 
 ## 主要功能
 
-- 支持 `GET`、`POST`、`PUT`、`PATCH`、`DELETE` 请求。
-- 支持 Auto、HTTP/1.1、HTTP/2 和严格 HTTP/3（界面中显示为 QUIC）。
-- 支持 Query 参数、请求头和请求正文编辑。
-- 支持 Basic Auth 和 Digest Auth。
-- cURL 编辑器与表单视图双向同步。
-- 支持环境变量、请求历史、Collection 目录和多标签页。
-- 显示实际发送的请求头，包括 Chromium 网络层自动添加的请求头。
-- 显示 HTTP 状态行、响应头、响应正文、ALPN、实际连接协议和网络错误。
-- 支持亮色/暗色主题以及可隐藏、可调整宽度的侧边栏。
+| 模块 | 主要功能 |
+|---|---|
+| HTTP 请求 | 支持 `GET`、`POST`、`PUT`、`PATCH`、`DELETE`，可编辑 Query 参数、请求头和请求正文 |
+| 网络协议 | 支持 Auto、HTTP/1.1、HTTP/2 和严格 HTTP/3（QUIC）策略 |
+| cURL | cURL 编辑器与表单视图双向同步，支持常用请求、认证和协议参数 |
+| HTTP 认证 | 支持 Basic Auth 和 Digest Auth |
+| 响应与诊断 | 显示实际请求头、状态行、响应头、响应正文、ALPN、协商协议和网络错误 |
+| 请求管理 | 支持环境变量、请求历史、Collection 目录和多标签页 |
+| SSH 终端 | 保存 SSH 连接，通过密码、私钥或 SSH agent 登录；支持文本选择、复制粘贴、内容搜索和带搜索标记的 Overlay 滚动条 |
+| SFTP 文件 | 浏览远程目录，支持列表/图标视图、面包屑导航、显示隐藏文件、新建目录、上传、下载、复制、粘贴和删除 |
+| 数据库 | 管理 SQLite 和 PostgreSQL 连接，浏览表与视图、编辑并运行 SQL，并以表格显示查询结果 |
+| PostgreSQL 安全连接 | 支持密码、SCRAM 和客户端证书认证，可配置 TLS 校验模式、CA 证书、客户端证书和私钥 |
+| 界面 | 支持亮色/暗色主题、可隐藏和调整宽度的侧边栏，以及水平多标签页 |
 
 ## 启动
 
@@ -247,6 +249,20 @@ cURL 请求，包含：
 
 历史记录保存的是发送时已经解析环境变量后的请求值。
 
+## SSH
+
+侧边栏的 `SSH` 页面用于管理 SSH 连接：
+
+1. 点击页面标题右侧的 `+`。
+2. 填写名称、主机、端口、用户名和认证方式。
+3. 保存后点击连接条目，连接会在右侧的水平标签页中打开。
+
+认证方式包括 SSH agent、密码和私钥。连接配置保存在
+`~/.config/crRequest/ssh_connections.json`；密码和私钥口令只保留在当前进程内存中，
+不会写入配置文件。程序默认使用 `~/.ssh/known_hosts` 校验服务器主机密钥；只有勾选
+首次使用时信任，才会把未知主机密钥写入该文件。当前会话页提供基础命令输入和文本
+输出，不是完整的 ANSI/VT 终端模拟器。
+
 ## 标签页与外观
 
 - 右上角 `+` 创建新请求标签页。
@@ -265,6 +281,7 @@ cURL 请求，包含：
 ~/.config/crRequest/settings.json       # 主题设置
 ~/.config/crRequest/environments.json   # 环境变量
 ~/.config/crRequest/history/*.cl        # 请求历史
+~/.config/crRequest/ssh_connections.json # SSH 连接配置（不含密码和口令）
 ```
 
 请注意：
