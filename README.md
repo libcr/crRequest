@@ -1,9 +1,9 @@
 # crRequest
 
-`crRequest` 是一个基于 Chromium 150 Network Service 和 Views 构建的桌面开发
-工具，集成了 HTTP API 调试、SSH/SFTP 和数据库查询功能。它可以编辑并发送
-HTTP/HTTPS 请求、连接远程 Shell、管理远程文件，以及查询 SQLite 和 PostgreSQL
-数据库。
+`crRequest` 是一个基于 Chromium 150 Network Service、Blink 和 Views 构建的桌面
+开发工具，集成了 HTTP API 调试、SSH/SFTP、数据库查询和常用开发工具。它可以编辑
+并发送 HTTP/HTTPS 请求、连接远程 Shell、管理远程文件、查询 SQLite 和 PostgreSQL
+数据库，并直接预览 MathML、静态 HTML/CSS 和支持 JavaScript 的交互式 Web 页面。
 
 ## 主要功能
 
@@ -19,7 +19,160 @@ HTTP/HTTPS 请求、连接远程 Shell、管理远程文件，以及查询 SQLit
 | SFTP 文件 | 浏览远程目录，支持列表/图标视图、面包屑导航、显示隐藏文件、新建目录、上传、下载、复制、粘贴和删除 |
 | 数据库 | 管理 SQLite 和 PostgreSQL 连接，浏览表与视图、编辑并运行 SQL，并以表格显示查询结果 |
 | PostgreSQL 安全连接 | 支持密码、SCRAM 和客户端证书认证，可配置 TLS 校验模式、CA 证书、客户端证书和私钥 |
+| 开发工具 | 提供 MathML、SVG、HTML Preview、WebView、Lottie、证书、Hash、HMAC、Base64、AEAD、时间戳、UUID、二维码、URL、JSON、JWT、CIDR、正则表达式和颜色等工具 |
 | 界面 | 支持亮色/暗色主题、可隐藏和调整宽度的侧边栏，以及水平多标签页 |
+
+## 内置开发工具
+
+侧边栏的 `Tools` 页面集中提供下列工具。列表名称同时标明主要使用的 Chromium
+模块，便于区分能力来源。
+
+| 工具 | 能力 |
+|---|---|
+| `blink::SVG` | 编辑 SVG 标记并预览图像 |
+| `blink::MathML` | 使用 Blink 排版 MathML 公式，实时预览并保存为 PNG |
+| `blink::HTML Preview` | 渲染静态 HTML 和内联 CSS，以透明背景预览并保存为 PNG |
+| `blink::WebView` | 在完整 Blink Frame 中运行 HTML、CSS 和内联 JavaScript，支持表单、键盘、鼠标、滚轮和动画交互 |
+| `skottie::Lottie` | 编辑 Lottie JSON 并预览动画 |
+| `net::X509Certificate` | 解析 PEM、Base64 DER 或十六进制 DER 证书 |
+| `crypto::Hash` | 计算 SHA-1、SHA-256、SHA-384 和 SHA-512 |
+| `crypto::HMAC` | 使用 SHA-1、SHA-256、SHA-384 或 SHA-512 计算 HMAC |
+| `base::Base64` | 编码或解码 Base64 数据 |
+| `crypto::AEAD` | 使用 AES-GCM 或 ChaCha20 进行认证加密和解密 |
+| `base::Time` | 在 Unix 时间戳和日期时间字符串之间转换 |
+| `base::Uuid` | 生成随机 UUID v4 |
+| `qr_code_generator::QR Code` | 根据 UTF-8 文本生成二维码 |
+| `base::URL Encoding` | 编码或解码 URL 文本 |
+| `base::Hex` | 编码 UTF-8 文本或解码十六进制字节 |
+| `base::JSON` | 校验并格式化 JSON |
+| `base::Base64Url / JSON` | 解码 JWT Header 和 Payload，不校验签名 |
+| `url::GURL` | 解析 URL 并查看规范化后的组成部分 |
+| `net::CIDR` | 检查 IPv4、IPv6 和 CIDR 网段 |
+| `re2::Regex` | 使用 Chromium RE2 测试正则匹配和文本替换 |
+| `ui::color_utils` | 在 HEX、RGB 和 HSL 之间转换，并显示亮度与对比度 |
+
+### `blink::MathML`
+
+输入内容必须以 `<math>` 为根元素。预览使用 Blink 的 MathML 排版能力，适合快速
+检查分式、上下标、根式、矩阵等数学标记。
+
+示例一：二次方程求根公式。
+
+```html
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>x</mi><mo>=</mo>
+  <mfrac>
+    <mrow><mo>−</mo><mi>b</mi><mo>±</mo><msqrt><msup><mi>b</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn><mi>a</mi><mi>c</mi></msqrt></mrow>
+    <mrow><mn>2</mn><mi>a</mi></mrow>
+  </mfrac>
+</math>
+```
+
+示例二：二阶矩阵。
+
+```html
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mo>[</mo>
+    <mtable>
+      <mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd></mtr>
+      <mtr><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd></mtr>
+    </mtable>
+    <mo>]</mo>
+  </mrow>
+</math>
+```
+
+### `blink::HTML Preview`
+
+该工具面向静态、可导出的 HTML/CSS 片段。它支持内联 `<style>`，使用透明背景，
+并把渲染结果裁剪后保存为 PNG；不执行 JavaScript，也不加载外部资源。
+
+示例一：状态卡片。
+
+```html
+<style>
+  .card { width: 280px; padding: 24px; border-radius: 18px;
+          color: #eaf2ff; background: linear-gradient(135deg, #172554, #2563eb);
+          box-shadow: 0 16px 36px rgba(37, 99, 235, .28); }
+  .label { font: 600 13px sans-serif; opacity: .72; letter-spacing: .08em; }
+  .value { margin-top: 8px; font: 700 34px sans-serif; }
+</style>
+<div class="card">
+  <div class="label">REQUESTS</div>
+  <div class="value">1,284</div>
+</div>
+```
+
+示例二：CSS 进度条。
+
+```html
+<style>
+  .panel { width: 340px; padding: 20px; border: 1px solid #dbeafe;
+           border-radius: 14px; background: #fff; font: 14px sans-serif; }
+  .track { height: 12px; margin-top: 12px; overflow: hidden;
+           border-radius: 999px; background: #e5e7eb; }
+  .bar { width: 72%; height: 100%; background: linear-gradient(90deg, #22c55e, #06b6d4); }
+</style>
+<div class="panel">
+  <strong>Build progress</strong><span style="float:right">72%</span>
+  <div class="track"><div class="bar"></div></div>
+</div>
+```
+
+### `blink::WebView`
+
+该工具是交互式 HTML Playground。页面运行在应用内嵌的 Blink Frame 中，支持内联
+JavaScript、DOM 事件、表单输入、焦点、键盘、鼠标、滚轮、CSS 动画和窗口尺寸变化。
+为避免预览内容访问外部环境，页面使用严格的 Content Security Policy，网络请求、
+外部资源、Worker、媒体、子 Frame、插件和表单提交均被禁用。
+
+示例一：可点击的计数器。
+
+```html
+<style>
+  body { display:grid; min-height:100vh; place-items:center; font:16px sans-serif; }
+  button { padding:12px 20px; border:0; border-radius:10px;
+           color:white; background:#2563eb; cursor:pointer; }
+</style>
+<button id="counter">Clicked 0 times</button>
+<script>
+  let count = 0;
+  const button = document.querySelector('#counter');
+  button.addEventListener('click', () => {
+    count += 1;
+    button.textContent = `Clicked ${count} times`;
+  });
+</script>
+```
+
+示例二：输入过滤与动画列表。
+
+```html
+<style>
+  body { margin:0; padding:32px; background:#f8fafc; font:15px sans-serif; }
+  input { width:280px; padding:11px 14px; border:1px solid #cbd5e1; border-radius:10px; }
+  li { width:280px; margin-top:10px; padding:12px 14px; border-radius:10px;
+       list-style:none; background:white; box-shadow:0 5px 14px rgba(15,23,42,.08);
+       animation:enter .25s ease both; }
+  ul { padding:0; }
+  @keyframes enter { from { opacity:0; transform:translateY(8px); } }
+</style>
+<input id="filter" placeholder="Filter components" />
+<ul id="items"></ul>
+<script>
+  const names = ['Request Editor', 'HTML Playground', 'Database Console'];
+  const input = document.querySelector('#filter');
+  const list = document.querySelector('#items');
+  function render() {
+    const query = input.value.toLowerCase();
+    list.innerHTML = names.filter(name => name.toLowerCase().includes(query))
+      .map(name => `<li>${name}</li>`).join('');
+  }
+  input.addEventListener('input', render);
+  render();
+</script>
+```
 
 ## 截图
 
@@ -325,3 +478,9 @@ crRequest，再删除上述文件或目录。
 - Response 以文本形式显示，不提供 JSON 树、图片预览或二进制文件保存。
 - Collection 的创建、导出、复制和删除等菜单尚未实现。
 - 当前没有跨启动恢复已打开标签页或已导入 Collection 的功能。
+- `blink::MathML` 和 `blink::HTML Preview` 的输入上限均为 256 KiB；
+  `blink::WebView` 的输入上限为 512 KiB。
+- `blink::HTML Preview` 仅支持静态 HTML 和内联 CSS，不支持脚本、事件处理器、链接、
+  图片、媒体、外部字体或网络资源。
+- `blink::WebView` 支持内联 JavaScript，但不提供网络访问、持久化存储、插件、外部
+  字体、图片、媒体、Worker 或嵌套页面能力。
